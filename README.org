@@ -15,7 +15,7 @@ We'll use shell blocks inside this file which can be executed with [[https://org
 
 To automate our interactions with Google Cloud Platform we'll use the [[https://cloud.google.com/sdk/docs/install#deb][GCP SDK]] which provides us with a number of command line tools to interact with the platform, such as ~gcloud~, ~gsutil~ and ~kubectl~.
 
-Tangle the shell block below to a shell script by pressing ~, b t~ in emacs command mode:
+Tangle the shell block below to a shell script by pressing *, b t* in emacs command mode:
 
 #+NAME: Install google cloud sdk
 #+BEGIN_SRC bash :shebang #!/bin/bash :tangle 1-install-gcp-sdk.sh
@@ -31,3 +31,19 @@ curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyr
 # Update and install the SDK
 sudo apt-get update && sudo apt-get install -y google-cloud-sdk
 #+END_SRC
+
+
+* Step 2 - Configure Google Cloud Platform resources
+
+With GCP SDK now installed we need to authenticate, create a project and then create a virtual machine instance that we will install Gitlab into later in the workflow.
+
+First up is authentication so our GCP SDK installation can carry out actions in a given account and project. This part of the process is currently a manual step as the authentication process includes some interactive steps.
+
+In future we could automate this process as part of a continous delivery pipeline using a GCP service account with permission to create virtual machine instances.
+
+#+NAME: Authenticate with google cloud platform
+#+BEGIN_SRC bash :shebang #!/bin/bash :tangle no
+gcloud auth login
+#+END_SRC
+
+Once we have authenticated we can create a project and then create a new virtual machine instance within that project.

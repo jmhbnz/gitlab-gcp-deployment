@@ -3,7 +3,7 @@
 
 # To automate our interactions with Google Cloud Platform we'll use the [[https://cloud.google.com/sdk/docs/install#deb][GCP SDK]] which provides us with a number of command line tools to interact with the platform, such as ~gcloud~, ~gsutil~ and ~kubectl~.
 
-# Tangle the shell block below to a shell script by pressing ~, b t~ in emacs command mode:
+# Tangle the shell block below to a shell script by pressing *, b t* in emacs command mode:
 
 # #+NAME: Install google cloud sdk
 
