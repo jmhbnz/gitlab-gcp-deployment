@@ -1,0 +1,18 @@
+#+TITLE: Gitlab GCP Deployment
+#+AUTHOR: James Blair
+#+EMAIL: mail@jamesblair.net
+#+DATE: 5th January 2021
+
+This org file is intended to capture and automate the end to end workflow to deploy an instance of [[https://gitlab.com][Gitlab]] on [[https://console.cloud.google.com][Google Cloud Platform]].
+
+We'll use shell blocks inside this file which can be executed with [[https://orgmode.org/worg/org-contrib/babel/][Babel]]. Additionally we want to explore tangling these source code blocks to shell script files within this document so that the scripts can then be executed by a continous delivery pipeline.
+
+To interact with this org file we're using the [[https://github.com/humacs/humacs][Humacs]] distribution of [[https://www.gnu.org/software/emacs/][Emacs]].
+
+*Note* This workflow has only been tested on the ~Ubuntu 20.04~ linux distribution, via [[https://ubuntu.com/wsl][WSL 2]].
+
+* Step 1 - Ensure GCP SDK is installed
+
+To automate our interactions with Google Cloud Platform we'll use the [[https://cloud.google.com/sdk/docs/install#deb][GCP SDK]] which provides us with a number of command line tools to interact with the platform, such as ~gcloud~, ~gsutil~ and ~kubectl~.
+
+Run the shell block below to install
