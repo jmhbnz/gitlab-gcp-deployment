@@ -11,7 +11,7 @@
 # #+NAME: Create a new google cloud project
 
 # Create a project id based on date
-export gcp_project_id="gitlab-gcp-"$(date +"%Y-%m-%d")
+export gcp_project_id="gitlab-gcp-"$(date +"%s")
 
 # Create new project using a random project id
 gcloud projects create $gcp_project_id
