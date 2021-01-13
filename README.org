@@ -11,6 +11,7 @@ We'll use shell blocks inside this file which can be executed with [[https://org
  1. To interact with this org file we're using the [[https://github.com/humacs/humacs][Humacs]] distribution of [[https://www.gnu.org/software/emacs/][Emacs]].
  1. This workflow has only been tested on the ~Ubuntu 20.04~ linux distribution, via [[https://ubuntu.com/wsl][WSL 2]].
 
+
 * Step 1 - Ensure GCP SDK is installed
 
 To automate our interactions with Google Cloud Platform we'll use the [[https://cloud.google.com/sdk/docs/install#deb][GCP SDK]] which provides us with a number of command line tools to interact with the platform, such as ~gcloud~, ~gsutil~ and ~kubectl~.
@@ -84,3 +85,13 @@ export gcp_machine_name="gitlab-gcp-"$(date +"%Y-%m-%d")
 # Create the new machine
 gcloud compute instances create $gcp_machine_name --zone australia-southeast1-a
 #+end_src
+
+
+* Step 3 - Install docker on virtual machine
+
+Coming soon...
+
+
+* Step 4 - Install gitlab via docker
+
+Coming soon...
