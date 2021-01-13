@@ -46,7 +46,12 @@ In future we could automate this process as part of a continous delivery pipelin
 gcloud auth login
 #+END_SRC
 
+
 Once we have authenticated we can create a project and then create a new virtual machine instance within that project.
+
+Firstly let's create a new project, a project is the logical boundary all our cloud resources for this deployment will live within. To be able to deploy resources we also need to enable billing.
+
+Tangle the shell block below to a shell script by pressing *, b t* in emacs command mode:
 
 #+NAME: Create a new google cloud project
 #+begin_src bash :shebang #!/bin/bash :tangle 2-configure-gcp-project.sh
@@ -59,4 +64,20 @@ gcloud projects create $gcp_project_id
 # Ensure billing is enabled for the project
 export gcp_billing_account=$(gcloud alpha billing accounts list --limit=1 --format='value(name.basename())')
 gcloud alpha billing projects link $gcp_project_id --billing-account $gcp_billing_account
+
+# Make sure the project is set active
+gcloud config set project $gcp_project_id
+#+end_src
+
+
+Once we have a project we can create a new virtual machine.
+
+Tangle the shell block below to a shell script by pressing *, b t* in emacs command mode:
+
+#+begin_src bash :shebang #!/bin/bash :tangle 3-create-virtual-machine.sh
+# Create name for virtual machine based on date
+export gcp_machine_name="gitlab-gcp-"$(date +"%Y-%m-%d")
+
+# Create the new machine
+gcloud compute instances create $gcp_machine_name
 #+end_src
