@@ -11,7 +11,7 @@
 gcloud services enable compute.googleapis.com
 
 # Create name for virtual machine based on date
-export gcp_machine_name="gitlab-gcp-"$(date +"%Y-%m-%d")
+export gcp_machine_name="gitlab-gcp-"$(date +"%s")
 
 # Create the new machine
 gcloud compute instances create $gcp_machine_name --zone australia-southeast1-a
