@@ -2,7 +2,7 @@
 
 
 
-# Once we have a project we can create a new virtual machine.
+# Once we have a project we can create a new virtual machine. To create a virtual machine we need to ensure compute engine apis are enabled.
 
 # Tangle the shell block below to a shell script by pressing *, b t* in emacs command mode:
 
