@@ -7,7 +7,7 @@
 
 
 # Retrieve the vm name
-  export gcp_machine_name=$(gcloud compute instances list --limit=1 --format='value(name.basename())')
+export gcp_machine_name=$(gcloud compute instances list --limit=1 --format='value(name.basename())')
 
 # Connect to the machine using ssh
 gcloud compute ssh $gcp_machine_name --ssh-key-file ~/.ssh/$USER -- "curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh"

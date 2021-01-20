@@ -34,7 +34,7 @@ sudo apt-get update && sudo apt-get install -y google-cloud-sdk
 #+END_SRC
 
 
-* Step 2 - Configure Google Cloud Platform resources
+* Step 2 - Configure cloud resources
 
 With GCP SDK now installed we need to authenticate, create a project and then create a virtual machine instance that we will install Gitlab into later in the workflow.
 
@@ -94,14 +94,34 @@ Next up we need to install [[https://docker.com][Docker]] on the newly created v
 By default the virtual machine operating system for the vm we created on GCP is [[https://debian.org][Debian]]. There are instructions for installing Docker on a debian machine [[https://docs.docker.com/engine/install/debian/#install-using-the-repository][here]].
 
 #+begin_src bash :shebang #!/bin/bash :tangle 4-install-docker.sh
-    # Retrieve the vm name
-    export gcp_machine_name=$(gcloud compute instances list --limit=1 --format='value(name.basename())')
+# Retrieve the vm name
+export gcp_machine_name=$(gcloud compute instances list --limit=1 --format='value(name.basename())')
 
-  # Connect to the machine using ssh
-  gcloud compute ssh $gcp_machine_name --ssh-key-file ~/.ssh/$USER -- "curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh"
-
+# Connect to the machine using ssh
+gcloud compute ssh $gcp_machine_name --ssh-key-file ~/.ssh/$USER -- "curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh"
 #+end_src
+
 
 * Step 4 - Install gitlab via docker
 
 Coming soon...
+
+
+* Step 5 - Teardown cloud resources
+
+The Google Cloud Platform resources created by this process come at a cost, so it's important we have an easy way to teardown those resources as soon as we're finished with them.
+
+Tangle the shell block below to a shell script by pressing *, b t* in emacs command mode:
+
+#+begin_src bash :shebang #!/bin/bash :tangle 5-teardown-cloud-resources.sh
+# Iterate over any matching projects
+for project in $(gcloud projects list | awk '{ print $1 }' | grep gitlab); do
+
+  # Iterate over any instances in the project
+  for instance in $(gcloud compute instances list --project $project --format="value(name)"); do
+
+    # Delete the instance
+    gcloud compute instances delete --quiet $instance --zone australia-southeast1-a
+  done
+done
+#+end_src
