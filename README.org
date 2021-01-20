@@ -122,6 +122,11 @@ for project in $(gcloud projects list | awk '{ print $1 }' | grep gitlab); do
 
     # Delete the instance
     gcloud compute instances delete --quiet $instance --zone australia-southeast1-a --project $project
+
   done
+
+  # Delete the project as well
+  gcloud projects delete $project --quiet
+
 done
 #+end_src
