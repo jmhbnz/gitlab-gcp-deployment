@@ -13,6 +13,6 @@ for project in $(gcloud projects list | awk '{ print $1 }' | grep gitlab); do
   for instance in $(gcloud compute instances list --project $project --format="value(name)"); do
 
     # Delete the instance
-    gcloud compute instances delete --quiet $instance --zone australia-southeast1-a
+    gcloud compute instances delete --quiet $instance --zone australia-southeast1-a --project $project
   done
 done
