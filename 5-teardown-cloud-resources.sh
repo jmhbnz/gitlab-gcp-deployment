@@ -1,7 +1,9 @@
 #!/bin/bash
 # Step 5 - Teardown cloud resources
 
-# The Google Cloud Platform resources created by this process come at a cost, so it's important we have an easy way to teardown those resources as soon as we're finished with them.
+# The Google Cloud Platform resources created by this process come at a cost, so it's important we have an easy way to teardown those resources as soon as we're finished with them!
+
+# The script below will delete any projects containing ~gitlab~ in the name along with any compute instances running in those projects.
 
 # Tangle the shell block below to a shell script by pressing *, b t* in emacs command mode:
 
