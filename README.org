@@ -70,6 +70,15 @@ gcloud alpha billing projects link $gcp_project_id --billing-account $gcp_billin
 gcloud config set project $gcp_project_id
 #+end_src
 
+#+RESULTS: Create a new google cloud project
+#+begin_src bash
+billingAccountName: billingAccounts/0175A9-AC77BE-CE5586
+billingEnabled: true
+name: projects/gitlab-gcp-1611720361/billingInfo
+projectId: gitlab-gcp-1611720361
+#+end_src
+
+* Step 3 - Create vertual machine
 
 Once we have a project we can create a new virtual machine. To create a virtual machine we need to ensure compute engine apis are enabled.
 
@@ -87,7 +96,7 @@ gcloud compute instances create $gcp_machine_name --zone australia-southeast1-a
 #+end_src
 
 
-* Step 3 - Install docker on virtual machine
+* Step 4 - Install docker on virtual machine
 
 Next up we need to install [[https://docker.com][Docker]] on the newly created virtual machine so that we can then deploy Gitlab as a container.
 
@@ -107,12 +116,12 @@ gcloud compute ssh $gcp_machine_name --ssh-key-file ~/.ssh/$USER -- "sudo chmod 
 #+end_src
 
 
-* Step 4 - Install gitlab via docker
+* Step 5 - Install gitlab via docker
 
 Coming soon...
 
 
-* Step 5 - Teardown cloud resources
+* Step 6 - Teardown cloud resources
 
 The Google Cloud Platform resources created by this process come at a cost, so it's important we have an easy way to teardown those resources as soon as we're finished with them!
 
@@ -120,7 +129,7 @@ The script below will delete any projects containing ~gitlab~ in the name along 
 
 Tangle the shell block below to a shell script by pressing *, b t* in emacs command mode:
 
-#+begin_src bash :shebang #!/bin/bash :tangle 5-teardown-cloud-resources.sh
+#+begin_src bash :shebang #!/bin/bash :tangle 6-teardown-cloud-resources.sh
 # Iterate over any matching projects
 for project in $(gcloud projects list | awk '{ print $1 }' | grep gitlab); do
 

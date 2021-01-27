@@ -1,6 +1,5 @@
 #!/bin/bash
-
-
+# Step 3 - Create vertual machine
 
 # Once we have a project we can create a new virtual machine. To create a virtual machine we need to ensure compute engine apis are enabled.
 
