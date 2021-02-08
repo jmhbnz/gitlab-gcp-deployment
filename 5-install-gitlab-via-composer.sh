@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-# Next up we need to copy file to gloud vm
+# Next up we need to tranfer file to gcloud vm and install the gitlab via docker composer
 
 
 # Retrieve the vm name

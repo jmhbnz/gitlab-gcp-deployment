@@ -141,7 +141,7 @@ Next step to create docker compose file for gitlab
 
 #+end_src
 
-Next up we need to copy file to gloud vm
+Next up we need to tranfer file to gcloud vm and install the gitlab via docker composer
 
 #+begin_src bash :shebang #!/bin/bash :tangle 5-install-gitlab-via-composer.sh
 # Retrieve the vm name
