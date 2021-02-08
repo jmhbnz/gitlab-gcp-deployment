@@ -4,17 +4,17 @@
 
 
 web:
-  image: 'gitlab/gitlab-ee:latest'
+  image: 'gitlab/gitlab-ce:latest'
   restart: always
   hostname: 'gitlab.example.com'
   environment:
     GITLAB_OMNIBUS_CONFIG: |
-      external_url 'https://gitlab.example.com'
+      external_url 'https://gitlab.example.com:3200'
   # Add any other gitlab.rb configuration here, each on its own line
   ports:
-    - '80:80'
+    - '3200:3200'
     - '443:443'
-    - '22:22'
+    - '2222:22'
   volumes:
     - '$GITLAB_HOME/config:/etc/gitlab'
     - '$GITLAB_HOME/logs:/var/log/gitlab'

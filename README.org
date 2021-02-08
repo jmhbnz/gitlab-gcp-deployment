@@ -78,6 +78,7 @@ name: projects/gitlab-gcp-1611720361/billingInfo
 projectId: gitlab-gcp-1611720361
 #+end_src
 
+
 * Step 3 - Create vertual machine
 
 Once we have a project we can create a new virtual machine. To create a virtual machine we need to ensure compute engine apis are enabled.
@@ -122,17 +123,17 @@ Next step to create docker compose file for gitlab
 
 #+begin_src yaml :tangle docker-compose.yaml
    web:
-     image: 'gitlab/gitlab-ee:latest'
+     image: 'gitlab/gitlab-ce:latest'
      restart: always
      hostname: 'gitlab.example.com'
      environment:
        GITLAB_OMNIBUS_CONFIG: |
-         external_url 'https://gitlab.example.com'
+         external_url 'https://gitlab.example.com:3200'
      # Add any other gitlab.rb configuration here, each on its own line
      ports:
-       - '80:80'
+       - '3200:3200'
        - '443:443'
-       - '22:22'
+       - '2222:22'
      volumes:
        - '$GITLAB_HOME/config:/etc/gitlab'
        - '$GITLAB_HOME/logs:/var/log/gitlab'
@@ -140,6 +141,19 @@ Next step to create docker compose file for gitlab
 
 #+end_src
 
+Next up we need to copy file to gloud vm
+
+#+begin_src bash :shebang #!/bin/bash :tangle 5-install-gitlab-via-composer.sh
+# Retrieve the vm name
+export gcp_machine_name=$(gcloud compute instances list --limit=1 --format='value(name.basename())')
+
+# Copy file to vm
+gloud compute scp docker-compose.yaml $gcp_machine_name --ssh-key-file ~/.ssh/$USER --strict-host-key-checking=no
+
+# Install gotlan with docker compose
+sleep 2
+gcloud compute ssh $gcp_machine_name --ssh-key-file ~/.ssh/$USER -- 'sudo docker compose up -d'
+#+end_src
 
 
 * Step 6 - Teardown cloud resources
