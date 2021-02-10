@@ -10,6 +10,5 @@ export gcp_machine_name=$(gcloud compute instances list --limit=1 --format='valu
 # Copy file to vm
 gcloud compute scp docker-compose.yaml $gcp_machine_name:/home/$USER --ssh-key-file ~/.ssh/$USER --strict-host-key-checking=no
 
-# Install gotlan with docker compose
-sleep 2
+# Install gitlab with docker compose
 gcloud compute ssh $gcp_machine_name --ssh-key-file ~/.ssh/$USER -- 'sudo docker-compose up -d'
