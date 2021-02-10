@@ -1,5 +1,4 @@
-#+TITLE: Gitlab
-GCP Deployment
+#+TITLE: Gitlab GCP Deployment
 #+AUTHOR: James Blair
 #+EMAIL: mail@jamesblair.net
 #+DATE: 5th January 2021
