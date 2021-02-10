@@ -4,7 +4,7 @@ GCP Deployment
 #+EMAIL: mail@jamesblair.net
 #+DATE: 5th January 2021
 
-[[file:https://github.com/jmhbnz/gitlab-gc-deployment/workflows/ci/badge.svg]]
+[[https://github.com/jmhbnz/gitlab-gcp-deployment/workflows/CI/badge.svg]]
 
 This org file is intended to capture and automate the end to end workflow to deploy an instance of [[https://gitlab.com][Gitlab]] on [[https://console.cloud.google.com][Google Cloud Platform]].
 
