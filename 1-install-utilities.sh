@@ -18,3 +18,8 @@ curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyr
 
 # Update and install the SDK
 sudo apt-get update && sudo apt-get install -y google-cloud-sdk
+
+# Install GitHub CLI
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+sudo apt-add-repository https://cli.github.com/packages
+sudo apt-get update && sudo apt-get install gh

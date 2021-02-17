@@ -13,7 +13,6 @@ We'll use shell blocks inside this file which can be executed with [[https://org
  1. To interact with this org file we're using the [[https://github.com/humacs/humacs][Humacs]] distribution of [[https://www.gnu.org/software/emacs/][Emacs]].
  1. This workflow has only been tested on the ~Ubuntu 20.04~ linux distribution, via [[https://ubuntu.com/wsl][WSL 2]].
 
-
 * Step 1 - Ensure GCP SDK is installed
 
 To automate our interactions with Google Cloud Platform we'll use the [[https://cloud.google.com/sdk/docs/install#deb][GCP SDK]] which provides us with a number of command line tools to interact with the platform, such as ~gcloud~, ~gsutil~ and ~kubectl~.
@@ -21,7 +20,7 @@ To automate our interactions with Google Cloud Platform we'll use the [[https://
 Tangle the shell block below to a shell script by pressing *, b t* in emacs command mode:
 
 #+NAME: Install google cloud sdk
-#+BEGIN_SRC bash :shebang #!/bin/bash :tangle 1-install-gcp-sdk.sh
+#+BEGIN_SRC bash :shebang #!/bin/bash :tangle 1-install-utilities.sh
 # Add the Cloud SDK distribution URI as a package source
 echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
 
@@ -33,6 +32,11 @@ curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyr
 
 # Update and install the SDK
 sudo apt-get update && sudo apt-get install -y google-cloud-sdk
+
+# Install GitHub CLI
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+sudo apt-add-repository https://cli.github.com/packages
+sudo apt-get update && sudo apt-get install gh
 #+END_SRC
 
 
@@ -49,6 +53,12 @@ In future we could automate this process as part of a continous delivery pipelin
 gcloud auth login
 #+END_SRC
 
+Next step is we need to authenticate with GitHub CLI. This part is the process is currently manual.
+We required GitHub CLI to store secrets to automate CI/CD pipeline for gcloud access.
+#+NAME: Authenticate with GitHub CLI
+#+begin_src bash
+gh auth login
+#+end_src
 
 Once we have authenticated we can create a project and then create a new virtual machine instance within that project.
 
@@ -59,7 +69,7 @@ Tangle the shell block below to a shell script by pressing *, b t* in emacs comm
 #+NAME: Create a new google cloud project
 #+begin_src bash :shebang #!/bin/bash :tangle 2-configure-gcp-project.sh
 # Create a project id based on date
-export gcp_project_id="gitlab-gcp-"$(date +"%s")
+export gcp_project_id="gitlab-gcp-ci-cd"
 
 # Create new project using a random project id
 gcloud projects create $gcp_project_id
@@ -70,24 +80,45 @@ gcloud alpha billing projects link $gcp_project_id --billing-account $gcp_billin
 
 # Make sure the project is set active
 gcloud config set project $gcp_project_id
+
+# Create service accounts
+gcloud iam service-accounts create $gcp_project_id-sa \
+  --description="GitHub actions deploy account" \
+  --display-name="GitHub-Action-Deploy"
+
+# Assign role
+gcloud projects add-iam-policy-binding $gcp_project_id \
+  --member=serviceAccount:$gcp_project_id-sa@$gcp_project_id.iam.gserviceaccount.com \
+  --role=roles/compute.instanceAdmin.v1
+
+gcloud projects add-iam-policy-binding $gcp_project_id \
+  --member=serviceAccount:$gcp_project_id-sa@$gcp_project_id.iam.gserviceaccount.com \
+  --role=roles/iam.serviceAccountUser
+
+gcloud iam service-accounts keys create key.json \
+  --iam-account $gcp_project_id-sa@$gcp_project_id.iam.gserviceaccount.com
 #+end_src
 
-#+RESULTS: Create a new google cloud project
-#+begin_src bash
-billingAccountName: billingAccounts/0175A9-AC77BE-CE5586
-billingEnabled: true
-name: projects/gitlab-gcp-1611720361/billingInfo
-projectId: gitlab-gcp-1611720361
+
+* Step 3 - Configure GitHub secrets...
+
+Once new service account is created and key.json file is created, We will have to upload these details into GitHub and automate the end to end CI/CD workflow.
+
+Tange the shell block below to a shell script by pressing *, b t* in emacs command mode:
+
+Once new srvice account is created and key.json file is created, We will have to upload these details into GitHub and automate the end to end CI/CD workflow.
+#+begin_src bash :shebang #!/bin/bash :tangle 3-create-github-secrets.sh
+TODO
 #+end_src
 
 
-* Step 3 - Create vertual machine
+* Step 4 - Create virtual machine
 
 Once we have a project we can create a new virtual machine. To create a virtual machine we need to ensure compute engine apis are enabled.
 
 Tangle the shell block below to a shell script by pressing *, b t* in emacs command mode:
 
-#+begin_src bash :shebang #!/bin/bash :tangle 3-create-virtual-machine.sh
+#+begin_src bash :shebang #!/bin/bash :tangle 4-create-virtual-machine.sh
 # Ensure compute engine apis are enabled in the project
 gcloud services enable compute.googleapis.com
 
@@ -99,13 +130,13 @@ gcloud compute instances create $gcp_machine_name --zone australia-southeast1-a
 #+end_src
 
 
-* Step 4 - Install docker on virtual machine
+* Step 5 - Install docker on virtual machine
 
 Next up we need to install [[https://docker.com][Docker]] on the newly created virtual machine so that we can then deploy Gitlab as a container.
 
 By default the virtual machine operating system for the vm we created on GCP is [[https://debian.org][Debian]]. There are instructions for installing Docker on a debian machine [[https://docs.docker.com/engine/install/debian/#install-using-the-repository][here]].
 
-#+begin_src bash :shebang #!/bin/bash :tangle 4-install-docker.sh
+#+begin_src bash :shebang #!/bin/bash :tangle 5-install-docker.sh
 # Retrieve the vm name
 export gcp_machine_name=$(gcloud compute instances list --limit=1 --format='value(name.basename())')
 
@@ -119,7 +150,7 @@ gcloud compute ssh $gcp_machine_name --ssh-key-file ~/.ssh/$USER -- "sudo chmod 
 #+end_src
 
 
-* Step 5 - Install gitlab via docker
+* Step 6 - Install gitlab via docker
 
 Next step to create docker compose file for gitlab
 
@@ -145,7 +176,7 @@ Next step to create docker compose file for gitlab
 
 Next up we need to tranfer file to gcloud vm and install the gitlab via docker composer
 
-#+begin_src bash :shebang #!/bin/bash :tangle 5-install-gitlab-via-composer.sh
+#+begin_src bash :shebang #!/bin/bash :tangle 6-install-gitlab-via-composer.sh
 # Retrieve the vm name
 export gcp_machine_name=$(gcloud compute instances list --limit=1 --format='value(name.basename())')
 
@@ -157,7 +188,7 @@ gcloud compute ssh $gcp_machine_name --ssh-key-file ~/.ssh/$USER -- 'sudo docker
 #+end_src
 
 
-* Step 6 - Teardown cloud resources
+* Step 7 - Teardown cloud resources
 
 The Google Cloud Platform resources created by this process come at a cost, so it's important we have an easy way to teardown those resources as soon as we're finished with them!
 
@@ -165,7 +196,7 @@ The script below will delete any projects containing ~gitlab~ in the name along 
 
 Tangle the shell block below to a shell script by pressing *, b t* in emacs command mode:
 
-#+begin_src bash :shebang #!/bin/bash :tangle 6-teardown-cloud-resources.sh
+#+begin_src bash :shebang #!/bin/bash :tangle 7-teardown-cloud-resources.sh
 # Iterate over any matching projects
 for project in $(gcloud projects list | awk '{ print $1 }' | grep gitlab); do
 

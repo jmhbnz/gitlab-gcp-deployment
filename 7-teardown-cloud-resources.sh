@@ -1,5 +1,5 @@
 #!/bin/bash
-# Step 6 - Teardown cloud resources
+# Step 7 - Teardown cloud resources
 
 # The Google Cloud Platform resources created by this process come at a cost, so it's important we have an easy way to teardown those resources as soon as we're finished with them!
 

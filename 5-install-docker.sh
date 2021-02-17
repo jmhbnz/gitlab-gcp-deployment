@@ -1,5 +1,5 @@
 #!/bin/bash
-# Step 4 - Install docker on virtual machine
+# Step 5 - Install docker on virtual machine
 
 # Next up we need to install [[https://docker.com][Docker]] on the newly created virtual machine so that we can then deploy Gitlab as a container.
 
