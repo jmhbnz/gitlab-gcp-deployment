@@ -27,11 +27,11 @@ jobs:
       - name: Install utilities
         run: ./1-install-utilities.sh
 
-      - name: Configuregcp project
-        run: ./2-configure-gcp-project.sh
+      #- name: Configuregcp project
+      # run: ./2-configure-gcp-project.sh
 
-      - name: Create github secrets
-        run: ./3-create-github-secrets.sh
+      #- name: Create github secrets
+      # run: ./3-create-github-secrets.sh
 
       - name: Login
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master

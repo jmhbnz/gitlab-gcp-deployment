@@ -6,6 +6,9 @@
 # Tangle the shell block below to a shell script by pressing *, b t* in emacs command mode:
 
 
+# Set default project
+gcloud config set project "gitlab-gcp-ci"
+
 # Ensure compute engine apis are enabled in the project
 gcloud services enable compute.googleapis.com
 
