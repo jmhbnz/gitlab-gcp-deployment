@@ -6,6 +6,9 @@
 # By default the virtual machine operating system for the vm we created on GCP is [[https://debian.org][Debian]]. There are instructions for installing Docker on a debian machine [[https://docs.docker.com/engine/install/debian/#install-using-the-repository][here]].
 
 
+# Set default zone
+gcloud config set compute/zone australia-southeast1-a
+
 # Retrieve the vm name
 export gcp_machine_name=$(gcloud compute instances list --limit=1 --format='value(name.basename())')
 
